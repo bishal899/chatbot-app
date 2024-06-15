@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+        }
+        
+        #chat-log {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-message, .bot-response {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .user-message {
+            background-color: #007BFF;
+            color: #fff;
+            align-self: flex-end;
+        }
+        
+        .bot-response {
+            background-color: #f1f1f1;
+            color: #333;
+            align-self: flex-start;
+        }
+        
+        form {
+            display: flex;
+        }
+        
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chatbot</h1>
+        <div id="chat-box">
+            <div id="chat-log"></div>
+            <form id="chat-form">
+                <input type="text" id="user-input" autocomplete="off" placeholder="Type a message..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').on('submit', function(event) {
+                event.preventDefault();
+                const userInput = $('#user-input').val();
+                $('#chat-log').append('<div class="user-message">' + userInput + '</div>');
+                $('#user-input').val('');
+
+                $.ajax({
+                    url: '/chat',
+                    method: 'POST',
+                    data: { user_input: userInput },
+                    success: function(response) {
+                        $('#chat-log').append('<div class="bot-response">' + response.response + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
